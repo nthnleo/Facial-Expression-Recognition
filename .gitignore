@@ -1,1 +1,4 @@
 lib/
+bin/
+FER/node_modules
+FER/pyvenv.cfg
