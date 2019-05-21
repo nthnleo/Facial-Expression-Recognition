@@ -3,3 +3,6 @@ bin/
 FER/node_modules
 FER/pyvenv.cfg
 main.js
+.DS_Store
+*.pyc
+*.jpg
