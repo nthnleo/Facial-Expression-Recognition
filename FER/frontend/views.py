@@ -6,6 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import cv2
 import base64
+from .fermodel import get_expression
+import os.path
 
 
 # Create your views here.
@@ -20,8 +22,12 @@ def extractExpression(request):
         convertBase64ToJPG(dataString)
         # getFaceFromImage(
         #     '../captured.jpg')
-        getFaceFromImage(
-            '/Users/rohini_yadav/Rohini/Workspace/Facial-Expression-Recognition/FER/captured.jpg')
+        my_path = os.path.abspath(os.path.dirname(__file__))
+        path = os.path.join(my_path, "../captured.jpg")
+        getFaceFromImage(path)
+
+        # predict expression by using data model
+        get_expression()
         return Response({"message": "Got some data!", "data": request.data})
     return Response({"message": "This is a get"})
 
@@ -78,7 +84,7 @@ def getFaceFromImage(imagePath):
         This will keep the name unique in case there are multiple faces detected.'''
         roi_color = image[y:y + h, x:x + w]
         print("[INFO] Object found. Saving locally.")
-        cv2.imwrite(str(w) + str(h) + '_faces.jpg', roi_color)
+        cv2.imwrite('face.jpg', roi_color)
 
     '''Now that you've added the code to draw the rectangles, use OpenCV's .imwrite() method to write the new image 
     to your local filesystem as faces_detected.jpg. 
