@@ -4,9 +4,6 @@ import YouTube from 'react-youtube';
 import YoutubePlayer from './YoutubePlayer.js';
 
 
-const ANGRY_VIDEO_ID = 'cmpRLQZkTb8';
-const HAPPY_VIDEO_ID = 'ZbZSe6N_BXs';
-const SAD_VIDEO_ID = 'L3HQMbQAWRc';
 
 class WebCam1 extends Component {
     setRef = webcam => {
@@ -17,7 +14,6 @@ class WebCam1 extends Component {
         super(props);
         this.state = {
             expression: '',
-            videoId: '',
         }
     }
 
@@ -38,7 +34,6 @@ class WebCam1 extends Component {
             console.log(data);
             this.setState({
                 expression: data.expression,
-                videoId: SAD_VIDEO_ID,
             });
             alert(data);
         });
@@ -46,9 +41,12 @@ class WebCam1 extends Component {
 
 
     renderVideo() {
+        const {
+            expression,
+        } = this.state;
         return (
             <YoutubePlayer
-                video={SAD_VIDEO_ID}
+                expression={expression}
             />
         );
     }
@@ -80,7 +78,7 @@ class WebCam1 extends Component {
         } = this.state;
         return (
             <Fragment>
-                { !expression && this.renderWebCam() }
+                { this.renderWebCam() }
                 { expression && this.renderVideo() }
             </Fragment>
         );
