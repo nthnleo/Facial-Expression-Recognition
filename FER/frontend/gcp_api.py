@@ -27,6 +27,6 @@ def gcp_api_get_expression():
 
     expression = get_prediction(content, project_id,  model_id)
     print(expression)
-    if (expression != None and expression.payload and len(expression.payload) > 0 and  expression.payload[0] != None and expression.payload[0].display_name):
+    if (expression != None and len(expression.payload) > 0 and expression.payload[0].display_name):
         return expression.payload[0].display_name
     return None

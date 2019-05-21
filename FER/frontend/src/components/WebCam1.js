@@ -4,20 +4,24 @@ import YouTube from "react-youtube";
 import YoutubePlayer from "./YoutubePlayer.js";
 
 class WebCam1 extends Component {
-  setRef = webcam => {
-    this.webcam = webcam;
-  };
+      setRef = webcam => {
+        this.webcam = webcam;
+      };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      expression: ""
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            expression: '',
+            videoId: '',
+            imageSrc: '',
+        }
+    }
+
 
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
-    fetch("http://127.0.0.1:8000/facialExpression/extractExpression", {
+      this.setState({imageSrc});
+      fetch("http://127.0.0.1:8000/facialExpression/extractExpression", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -41,10 +45,15 @@ class WebCam1 extends Component {
       });
   };
 
-  renderVideo() {
-    const { expression } = this.state;
-    return <YoutubePlayer expression={expression} />;
-  }
+  renderGif() {
+        return (
+            <Fragment>
+                <iframe src="https://giphy.com/embed/11tTNkNy1SdXGg" width="480" height="267" frameBorder="0"
+                        className="giphy-embed" allowFullScreen></iframe>
+            </Fragment>
+
+        );
+    }
 
   renderWebCam() {
     const videoConstraints = {
@@ -52,31 +61,39 @@ class WebCam1 extends Component {
       height: 720,
       facingMode: "user"
     };
+    const {
+        expression,
+        imageSrc,
+    } = this.state;
 
     return (
-      <Fragment>
-        <Webcam
-          audio={false}
-          height={600}
-          ref={this.setRef}
-          screenshotFormat="image/jpeg"
-          width={600}
-          videoConstraints={videoConstraints}
-        />
-        <button onClick={this.capture}>Capture photo</button>
-      </Fragment>
+        !imageSrc ?
+          <Fragment>
+            <Webcam
+              audio={false}
+              height={600}
+              ref={this.setRef}
+              screenshotFormat="image/jpeg"
+              width={600}
+              videoConstraints={videoConstraints}
+            />
+            <button onClick={this.capture}>Capture photo</button>
+          </Fragment>  :
+          <img src={imageSrc} alt={"Loading"}/>
     );
   }
 
-  render() {
-    const { expression } = this.state;
-    return (
-      <Fragment>
-        {this.renderWebCam()}
-        {expression && this.renderVideo()}
-      </Fragment>
-    );
-  }
+    render() {
+        const {
+            expression,
+        } = this.state;
+        return (
+            <Fragment>
+                { this.renderWebCam() }
+                { expression && this.renderGif() }
+            </Fragment>
+        );
+    }
 }
 
 export default WebCam1;
