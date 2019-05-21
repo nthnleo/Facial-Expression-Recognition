@@ -2,37 +2,21 @@ import React, {Component, Fragment} from 'react';
 import Webcam from 'react-webcam';
 import YouTube from 'react-youtube';
 
+
+const ANGRY_VIDEO_ID = 'cmpRLQZkTb8';
+const HAPPY_VIDEO_ID = 'ZbZSe6N_BXs';
+const SAD_VIDEO_ID = 'L3HQMbQAWRc';
+
 class WebCam1 extends Component {
-  setRef = webcam => {
-    this.webcam = webcam;
-  };
-
-  render() {
-    const videoConstraints = {
-      width: 1280,
-      height: 720,
-      facingMode: 'user'
+    setRef = webcam => {
+        this.webcam = webcam;
     };
-
-    return (
-      <div>
-        <Webcam
-          audio={false}
-          height={350}
-          ref={this.setRef}
-          screenshotFormat='image/jpeg'
-          width={350}
-          videoConstraints={videoConstraints}
-        />
-        <button onClick={this.capture}>Capture photo</button>
-      </div>
-    );
-  }
 
     constructor(props) {
         super(props);
         this.state = {
-            emotion: '',
+            expression: '',
+            videoId: '',
         }
     }
 
@@ -54,13 +38,16 @@ class WebCam1 extends Component {
         }).then(response => {
             this.setState({
                 emotion: response,
+                videoId: HAPPY_VIDEO_ID,
             });
-            alert(JSON.stringify(response));
         });
     };
 
 
     renderVideo() {
+        const {
+            videoId,
+        } = this.state;
         const opts = {
             height: '390',
             width: '640',
@@ -70,7 +57,7 @@ class WebCam1 extends Component {
         };
         return (
             <YouTube
-                videoId="2g811Eo7K8U"
+                videoId={videoId}
                 opts={opts}
             />
         );
@@ -80,7 +67,7 @@ class WebCam1 extends Component {
         const videoConstraints = {
             width: 1280,
             height: 720,
-            facingMode: "user"
+            facingMode: 'user'
         };
 
         return (
@@ -89,7 +76,7 @@ class WebCam1 extends Component {
                     audio={false}
                     height={600}
                     ref={this.setRef}
-                    screenshotFormat="image/jpeg"
+                    screenshotFormat='image/jpeg'
                     width={600}
                     videoConstraints={videoConstraints}/>
                 <button onClick={this.capture}>Capture photo</button>
