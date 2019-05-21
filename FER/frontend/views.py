@@ -7,6 +7,7 @@ from rest_framework.response import Response
 import cv2
 import base64
 from .fermodel import get_expression
+from .gcp_api import gcp_api_get_expression
 import os.path
 
 
@@ -28,7 +29,8 @@ def extractExpression(request):
 
         # predict expression by using data model
         expression = get_expression()
-        return Response({"expression": expression})
+        expressionFromGCP = gcp_api_get_expression()
+        return Response({"expression": expression, "expressionFromGCP": expressionFromGCP})
     return Response({"message": "This is a get"})
 
 
