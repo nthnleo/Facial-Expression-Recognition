@@ -40,12 +40,14 @@ def extractExpression(request):
         return Response({"expression": expression, "expressionFromGCP": expressionFromGCP})
     return Response({"message": "This is a get"})
 
+
 def convertBase64ToJPG(dataString):
     requestArray = dataString.split(",")
     base64String = requestArray[1]
     base64Byte = base64String.encode()
     with open("captured.jpg", "wb") as fh:
         fh.write(base64.decodebytes(base64Byte))
+
 
 def getFaceFromImage(imagePath):
     print({imagePath})
@@ -107,3 +109,4 @@ def getFaceFromImage(imagePath):
     status = cv2.imwrite('faces_detected.jpg', image)
 
     print("Image faces_detected.jpg written to filesystem: ", status)
+    return len(faces)
