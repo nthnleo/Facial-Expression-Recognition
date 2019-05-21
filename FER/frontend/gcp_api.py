@@ -16,7 +16,7 @@ def get_prediction(content, project_id, model_id):
 
 def gcp_api_get_expression():
     project_id = 'fer-project-241205'
-    model_id = 'ICN5907511835162082476'
+    model_id = 'ICN680681802267300851'
 
     my_path = os.path.abspath(os.path.dirname(__file__))
     file_path = os.path.join(my_path, "../face.jpg")
@@ -25,5 +25,7 @@ def gcp_api_get_expression():
         content = ff.read()
 
     expression = get_prediction(content, project_id,  model_id)
-    print(expression)
-    return expression
+
+    if (expression != None and expression.payload[0] != None and expression.payload[0].display_name):
+        return expression.payload[0].display_name
+    return None
