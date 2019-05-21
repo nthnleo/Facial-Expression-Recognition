@@ -50,6 +50,9 @@ def getFaceFromImage(imagePath):
     # and converts it to an OpenCV object. Next, OpenCV's .cvtColor() function converts the input image object to a
     # grayscale object.
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite('gray_image.png', gray)
+    # cv2.imshow('image', gray)
+    # cv2.waitKey(0)
 
     '''gray: This specifies the use of the OpenCV grayscale image object that you loaded earlier.
     scaleFactor: This parameter specifies the rate to reduce the image size at each image scale. Your model has a fixed scale during training, so input images can be scaled down for improved detection. This process stops after reaching a threshold limit, defined by maxSize and minSize.
@@ -86,11 +89,14 @@ def getFaceFromImage(imagePath):
         This will keep the name unique in case there are multiple faces detected.'''
         roi_color = image[y:y + h, x:x + w]
         print("[INFO] Object found. Saving locally.")
-        cv2.imwrite('face.jpg', roi_color)
+        gray_image = cv2.cvtColor(roi_color, cv2.COLOR_BGR2GRAY)
+
+        cv2.imwrite('face.jpg', gray_image)
 
     '''Now that you've added the code to draw the rectangles, use OpenCV's .imwrite() method to write the new image 
     to your local filesystem as faces_detected.jpg. 
     This method will return true if the write was successful and false if it wasn't able to write the new image.'''
+
     status = cv2.imwrite('faces_detected.jpg', image)
 
     print("Image faces_detected.jpg written to filesystem: ", status)
