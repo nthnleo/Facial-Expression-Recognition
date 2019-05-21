@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import cv2
+
 
 # Create your views here.
 def index(request):
@@ -12,5 +14,47 @@ def index(request):
 @api_view(['GET', 'POST'])
 def extractExpression(request):
     if request.method == 'POST':
+        getFaceFromImage('/Users/rohini_yadav/Rohini/Workspace/Facial-Expression-Recognition/people_with_phones.png');
         return Response({"message": "Got some data!", "data": request.data})
     return Response({"message": "This is a get"})
+
+def getFaceFromImage(imagePath):
+    image = cv2.imread(imagePath)
+    #convert in grayscale
+    #The .imread() function takes the input image, which is passed as an argument to the script, 
+    # and converts it to an OpenCV object. Next, OpenCV's .cvtColor() function converts the input image object to a 
+    # grayscale object.
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    '''gray: This specifies the use of the OpenCV grayscale image object that you loaded earlier.
+    scaleFactor: This parameter specifies the rate to reduce the image size at each image scale. Your model has a fixed scale during training, so input images can be scaled down for improved detection. This process stops after reaching a threshold limit, defined by maxSize and minSize.
+    minNeighbors: This parameter specifies how many neighbors, or detections, each candidate rectangle should have to retain it. A higher value may result in less false positives, but a value too high can eliminate true positives.
+    minSize: This allows you to define the minimum possible object size measured in pixels. Objects smaller than this parameter are ignored.
+    '''
+    faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    faces = faceCascade.detectMultiScale(
+            gray,
+            scaleFactor=1.3,
+            minNeighbors=3,
+            minSize=(30, 30)
+    ) 
+
+    #After generating a list of rectangles, the faces are then counted with the len function. 
+    # The number of detected faces are then returned as output after running the script.
+    print("Found {0} Faces!".format(len(faces)))
+
+    '''Next, you will use OpenCV's .rectangle() method to draw a rectangle around the detected faces:
+    This code uses a for loop to iterate through the list of pixel locations returned from faceCascade.detectMultiScale method for each detected object. The rectangle method will take four arguments:
+    image tells the code to draw rectangles on the original input image.
+    (x,y), (x+w, y+h) are the four pixel locations for the detected object. rectangle will use these to locate and draw rectangles around the detected objects in the input image.
+    (0, 255, 0) is the color of the shape. This argument gets passed as a tuple for BGR. For example, you would use (255, 0, 0) for blue. We are using green in this case.
+    2 is the thickness of the line measured in pixels.'''
+    for (x, y, w, h) in faces:
+        cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+    '''Now that you've added the code to draw the rectangles, use OpenCV's .imwrite() method to write the new image 
+    to your local filesystem as faces_detected.jpg. 
+    This method will return true if the write was successful and false if it wasn't able to write the new image.'''
+    status = cv2.imwrite('faces_detected.jpg', image)
+
+    print ("Image faces_detected.jpg written to filesystem: ",status)
