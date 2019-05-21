@@ -5,24 +5,41 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import cv2
+import base64
 
 
 # Create your views here.
 def index(request):
     return render(request, 'frontend/index.html')
 
+
 @api_view(['GET', 'POST'])
 def extractExpression(request):
     if request.method == 'POST':
-        getFaceFromImage('/Users/rohini_yadav/Rohini/Workspace/Facial-Expression-Recognition/people_with_phones.png');
+        dataString = request.data.get("data", "some random data")
+        convertBase64ToJPG(dataString)
+        # getFaceFromImage(
+        #     '../captured.jpg')
+        getFaceFromImage(
+            '/Users/rohini_yadav/Rohini/Workspace/Facial-Expression-Recognition/FER/captured.jpg')
         return Response({"message": "Got some data!", "data": request.data})
     return Response({"message": "This is a get"})
 
+
+def convertBase64ToJPG(dataString):
+    requestArray = dataString.split(",")
+    base64String = requestArray[1]
+    base64Byte = base64String.encode()
+    with open("captured.jpg", "wb") as fh:
+        fh.write(base64.decodebytes(base64Byte))
+
+
 def getFaceFromImage(imagePath):
+    print({imagePath})
     image = cv2.imread(imagePath)
     #convert in grayscale
-    #The .imread() function takes the input image, which is passed as an argument to the script, 
-    # and converts it to an OpenCV object. Next, OpenCV's .cvtColor() function converts the input image object to a 
+    # The .imread() function takes the input image, which is passed as an argument to the script,
+    # and converts it to an OpenCV object. Next, OpenCV's .cvtColor() function converts the input image object to a
     # grayscale object.
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -31,15 +48,16 @@ def getFaceFromImage(imagePath):
     minNeighbors: This parameter specifies how many neighbors, or detections, each candidate rectangle should have to retain it. A higher value may result in less false positives, but a value too high can eliminate true positives.
     minSize: This allows you to define the minimum possible object size measured in pixels. Objects smaller than this parameter are ignored.
     '''
-    faceCascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    faceCascade = cv2.CascadeClassifier(
+        cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     faces = faceCascade.detectMultiScale(
-            gray,
-            scaleFactor=1.3,
-            minNeighbors=3,
-            minSize=(30, 30)
-    ) 
+        gray,
+        scaleFactor=1.3,
+        minNeighbors=3,
+        minSize=(30, 30)
+    )
 
-    #After generating a list of rectangles, the faces are then counted with the len function. 
+    # After generating a list of rectangles, the faces are then counted with the len function.
     # The number of detected faces are then returned as output after running the script.
     print("Found {0} Faces!".format(len(faces)))
 
@@ -51,10 +69,20 @@ def getFaceFromImage(imagePath):
     2 is the thickness of the line measured in pixels.'''
     for (x, y, w, h) in faces:
         cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        '''The roi_color object plots the pixel locations from the faces list on the original input image. 
+        The x, y, h, and w variables are the pixel locations for each of the objects detected from faceCascade.detectMultiScale 
+        method. 
+        The code then prints output stating that an object was found and will be saved locally.
+        Once that is done, the code saves the plot as a new image using the cv2.imwrite method. 
+        It appends the width and height of the plot to the name of the image being written to. 
+        This will keep the name unique in case there are multiple faces detected.'''
+        roi_color = image[y:y + h, x:x + w]
+        print("[INFO] Object found. Saving locally.")
+        cv2.imwrite(str(w) + str(h) + '_faces.jpg', roi_color)
 
     '''Now that you've added the code to draw the rectangles, use OpenCV's .imwrite() method to write the new image 
     to your local filesystem as faces_detected.jpg. 
     This method will return true if the write was successful and false if it wasn't able to write the new image.'''
     status = cv2.imwrite('faces_detected.jpg', image)
 
-    print ("Image faces_detected.jpg written to filesystem: ",status)
+    print("Image faces_detected.jpg written to filesystem: ", status)
