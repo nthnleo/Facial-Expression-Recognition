@@ -9,6 +9,7 @@ import base64
 from .fermodel import get_expression
 from .gcp_api import gcp_api_get_expression
 import os.path
+import os
 
 
 # Create your views here.
@@ -25,14 +26,19 @@ def extractExpression(request):
         #     '../captured.jpg')
         my_path = os.path.abspath(os.path.dirname(__file__))
         path = os.path.join(my_path, "../captured.jpg")
-        getFaceFromImage(path)
+        noOfFaces = getFaceFromImage(path)
 
         # predict expression by using data model
+        if (noOfFaces == None):
+            return Response({"expression": "None", "expressionFromGCP": "None"})
+
         expression = get_expression()
         expressionFromGCP = gcp_api_get_expression()
+
+        # remove the face.jpg
+        os.remove('face.jpg')
         return Response({"expression": expression, "expressionFromGCP": expressionFromGCP})
     return Response({"message": "This is a get"})
-
 
 def convertBase64ToJPG(dataString):
     requestArray = dataString.split(",")
@@ -40,7 +46,6 @@ def convertBase64ToJPG(dataString):
     base64Byte = base64String.encode()
     with open("captured.jpg", "wb") as fh:
         fh.write(base64.decodebytes(base64Byte))
-
 
 def getFaceFromImage(imagePath):
     print({imagePath})
@@ -71,6 +76,8 @@ def getFaceFromImage(imagePath):
     # After generating a list of rectangles, the faces are then counted with the len function.
     # The number of detected faces are then returned as output after running the script.
     print("Found {0} Faces!".format(len(faces)))
+    if (len(faces) == 0):
+        return None
 
     '''Next, you will use OpenCV's .rectangle() method to draw a rectangle around the detected faces:
     This code uses a for loop to iterate through the list of pixel locations returned from faceCascade.detectMultiScale method for each detected object. The rectangle method will take four arguments:

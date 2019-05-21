@@ -21,11 +21,13 @@ def gcp_api_get_expression():
     my_path = os.path.abspath(os.path.dirname(__file__))
     file_path = os.path.join(my_path, "../face.jpg")
 
+    print(file_path)
     with open(file_path, 'rb') as ff:
         content = ff.read()
-
+    
+    print (content)
     expression = get_prediction(content, project_id,  model_id)
     print(expression)
-    if (expression != None and expression.payload[0] != None and expression.payload[0].display_name):
+    if (expression != None and expression.payload and len(expression.payload) > 0 and  expression.payload[0] != None and expression.payload[0].display_name):
         return expression.payload[0].display_name
     return None
