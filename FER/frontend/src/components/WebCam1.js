@@ -1,7 +1,12 @@
 import React, { Component, Fragment } from "react";
 import Webcam from "react-webcam";
-import YouTube from "react-youtube";
-import YoutubePlayer from "./YoutubePlayer.js";
+
+const EXPRESSION_MAP = {
+    angry: "https://giphy.com/embed/11tTNkNy1SdXGg",
+    sad: "https://giphy.com/embed/9Y5BbDSkSTiY8",
+    happy: "https://giphy.com/embed/rdma0nDFZMR32",
+    neutral: "https://giphy.com/embed/3o6nUYhmHg75WFGHHG",
+}
 
 class WebCam1 extends Component {
       setRef = webcam => {
@@ -38,17 +43,21 @@ class WebCam1 extends Component {
         console.log(data);
         this.setState({
           expression: data.expressionFromGCP
-            ? data.expressionFromGCP
-            : data.expression
+            ? data.expressionFromGCP.toLowerCase()
+            : data.expression.toLowerCase()
         });
         alert(data);
       });
   };
 
   renderGif() {
+      const {
+          expression,
+      } = this.state;
+      let gifSrc = EXPRESSION_MAP[expression];
         return (
             <Fragment>
-                <iframe src="https://giphy.com/embed/11tTNkNy1SdXGg" width="480" height="267" frameBorder="0"
+                <iframe src={gifSrc} width="480" height="267" frameBorder="0"
                         className="giphy-embed" allowFullScreen></iframe>
             </Fragment>
 
