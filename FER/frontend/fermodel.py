@@ -29,3 +29,4 @@ def get_expression():
     images.append(image)
     result = predict_emotion(face_images=images)
     print(result)
+    return result
