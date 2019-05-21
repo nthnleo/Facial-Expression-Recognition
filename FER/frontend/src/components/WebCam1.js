@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import Webcam from 'react-webcam';
 import YouTube from 'react-youtube';
+import YoutubePlayer from './YoutubePlayer.js';
 
 
 const ANGRY_VIDEO_ID = 'cmpRLQZkTb8';
@@ -20,10 +21,6 @@ class WebCam1 extends Component {
         }
     }
 
-    setRef = webcam => {
-        this.webcam = webcam;
-    };
-
     capture = () => {
         const imageSrc = this.webcam.getScreenshot();
         fetch('http://127.0.0.1:8000/facialExpression/extractExpression', {
@@ -36,29 +33,22 @@ class WebCam1 extends Component {
                 data: imageSrc
             })
         }).then(response => {
+            return response.json();
+        }).then(data => {
+            console.log(data);
             this.setState({
-                emotion: response,
-                videoId: HAPPY_VIDEO_ID,
+                expression: data.expression,
+                videoId: SAD_VIDEO_ID,
             });
+            alert(data);
         });
     };
 
 
     renderVideo() {
-        const {
-            videoId,
-        } = this.state;
-        const opts = {
-            height: '390',
-            width: '640',
-            playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 1
-            }
-        };
         return (
-            <YouTube
-                videoId={videoId}
-                opts={opts}
+            <YoutubePlayer
+                video={SAD_VIDEO_ID}
             />
         );
     }
@@ -86,12 +76,12 @@ class WebCam1 extends Component {
 
     render() {
         const {
-            emotion,
+            expression,
         } = this.state;
         return (
             <Fragment>
-                { !emotion && this.renderWebCam() }
-                { emotion && this.renderVideo() }
+                { !expression && this.renderWebCam() }
+                { expression && this.renderVideo() }
             </Fragment>
         );
     }

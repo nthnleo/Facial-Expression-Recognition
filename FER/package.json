@@ -23,7 +23,6 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "react-webcam": "^1.1.1",
-    "react-youtube": "^7.9.0"
+    "react-webcam": "^1.1.1"
   }
 }
