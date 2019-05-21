@@ -6,6 +6,7 @@ main.js
 .DS_Store
 *.pyc
 *.jpg
+*.png
 FER/__pycache__/
 frontend/migrations/__pycache__/
 captured.jpg

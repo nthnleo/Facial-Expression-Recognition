@@ -25,7 +25,7 @@ def gcp_api_get_expression():
         content = ff.read()
 
     expression = get_prediction(content, project_id,  model_id)
-
+    print(expression)
     if (expression != None and expression.payload[0] != None and expression.payload[0].display_name):
         return expression.payload[0].display_name
     return None
