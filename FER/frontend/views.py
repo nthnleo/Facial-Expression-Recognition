@@ -27,8 +27,8 @@ def extractExpression(request):
         getFaceFromImage(path)
 
         # predict expression by using data model
-        get_expression()
-        return Response({"message": "Got some data!", "data": request.data})
+        expression = get_expression()
+        return Response({"expression": expression})
     return Response({"message": "This is a get"})
 
 
