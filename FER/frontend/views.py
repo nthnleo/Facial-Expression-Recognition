@@ -32,7 +32,8 @@ def extractExpression(request):
         if (noOfFaces == None):
             return Response({"expression": "None", "expressionFromGCP": "None"})
 
-        expression = get_expression()
+        # expression = get_expression()
+        expression = None
         expressionFromGCP = gcp_api_get_expression()
 
         # remove the face.jpg
