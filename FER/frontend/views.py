@@ -36,7 +36,10 @@ def extractExpression(request):
         expressionFromGCP = gcp_api_get_expression()
 
         # remove the face.jpg
-        os.remove('face.jpg')
+        exists = os.path.isfile('face.jpg')
+        if exists:
+            os.remove('face.jpg')
+
         return Response({"expression": expression, "expressionFromGCP": expressionFromGCP})
     return Response({"message": "This is a get"})
 
