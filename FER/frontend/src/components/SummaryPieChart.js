@@ -11,11 +11,16 @@ class SummaryPieChart extends Component{
             neutral,
             surprise,
             disgust,
+            fear,
         } = this.props;
         let data = [
             {
                 name: "happy",
                 value: happy
+            },
+            {
+                name: "fear",
+                value: fear
             },
             {
                 name: "sad",

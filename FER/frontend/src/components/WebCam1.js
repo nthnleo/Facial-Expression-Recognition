@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import Webcam from "react-webcam";
 import SummaryPieChart from "./SummaryPieChart.js";
+import { Table, Button, Container, Row, Col } from 'react-bootstrap';
 
 const EXPRESSION_MAP = {
   angry: {
@@ -30,6 +31,10 @@ const EXPRESSION_MAP = {
   surprise: {
     gifurl: "https://giphy.com/embed/kym4u59Xx1V2U",
     comment: "You look SURPRISED!!!"
+  },
+  fear: {
+    gifurl: "https://giphy.com/embed/xUOxf5cHAC4GFFYNWw",
+    comment: "You look in FEAR!!! Where is the Ghost!!"
   }
 };
 
@@ -47,6 +52,7 @@ class WebCam1 extends Component {
       angry: 0,
       sad: 0,
       happy: 0,
+      fear: 0,
       neutral: 0,
       surprise: 0,
       disgust: 0,
@@ -79,6 +85,7 @@ class WebCam1 extends Component {
         this.setState({
           expression: expression
         });
+        this.addExpression(expression);
       });
   };
 
@@ -105,47 +112,56 @@ class WebCam1 extends Component {
                       ? data.expressionFromGCP
                       : data.expression;
                   expression = expression ? expression.toLowerCase() : null;
-                  let count = 0;
-                  switch (expression) {
-                      case "angry":
-                          count = this.state.angry + 1;
-                          this.setState({
-                              angry: count
-                          });
-                          break;
-                      case "sad":
-                          count = this.state.sad + 1;
-                          this.setState({
-                              sad: count
-                          });
-                          break;
-                      case "happy":
-                          count = this.state.happy + 1;
-                          this.setState({
-                              happy: count
-                          });
-                          break;
-                      case "neutral":
-                          count = this.state.neutral + 1;
-                          this.setState({
-                              neutral: count
-                          });
-                          break;
-                      case "disgust":
-                          count = this.state.disgust + 1;
-                          this.setState({
-                              disgust: count
-                          });
-                          break;
-                      case "surprise":
-                          count = this.state.surprise + 1;
-                          this.setState({
-                              surprise: count
-                          });
-                          break;
-                  }
+                  this.addExpression(expression);
               });
       }, 5000);
+  }
+
+  addExpression = (expression) => {
+      let count;
+      switch (expression) {
+          case "angry":
+              count = this.state.angry + 1;
+              this.setState({
+                  angry: count
+              });
+              break;
+          case "sad":
+              count = this.state.sad + 1;
+              this.setState({
+                  sad: count
+              });
+              break;
+          case "happy":
+              count = this.state.happy + 1;
+              this.setState({
+                  happy: count
+              });
+              break;
+          case "neutral":
+              count = this.state.neutral + 1;
+              this.setState({
+                  neutral: count
+              });
+              break;
+          case "disgust":
+              count = this.state.disgust + 1;
+              this.setState({
+                  disgust: count
+              });
+              break;
+          case "surprise":
+              count = this.state.surprise + 1;
+              this.setState({
+                  surprise: count
+              });
+              break;
+          case "fear":
+              count = this.state.fear + 1;
+              this.setState({
+                  fear: count
+              });
+      }
   }
 
   stopRecording = () => {
@@ -167,7 +183,6 @@ class WebCam1 extends Component {
           className="giphy-embed"
           allowFullScreen
         />
-        <button onClick={this.renderWebCam}>Try Again</button>
       </Fragment>
     );
   }
@@ -178,7 +193,6 @@ class WebCam1 extends Component {
       height: 720,
       facingMode: "user"
     };
-    const { imageSrc } = this.state;
 
     return (
       <Fragment>
@@ -194,9 +208,15 @@ class WebCam1 extends Component {
           <button onClick={this.state.isRecord ? this.stopRecording : this.startRecording}>
               {this.state.isRecord ? "Stop Recording": "Start Recording"}
           </button>
-        {imageSrc && <img src={imageSrc} alt={"Loading"} />}
       </Fragment>
     );
+  }
+
+  renderImage() {
+    const {
+      imageSrc,
+    } = this.state;
+    return(imageSrc && <img src={imageSrc} alt={"Loading"} />)
   }
 
   render() {
@@ -208,20 +228,39 @@ class WebCam1 extends Component {
       neutral,
       surprise,
       disgust,
-        isRecord
+      fear,
+      isRecord,
     } = this.state;
     return (
-      <Fragment>
-        {this.renderWebCam()}
-        {expression && this.renderResult()}
-        <SummaryPieChart
-          angry={angry}
-          sad={sad}
-          happy={happy}
-          neutral={neutral}
-          surprise={surprise}
-          disgust={disgust}
-        />
+        <Fragment>
+          <Table style={{position: 'absolute'}}>
+            <tbody>
+              <tr>
+                  <td>
+                    {this.renderWebCam()}
+                  </td>
+                  <td style={{paddingTop: '180px'}}>
+                    {this.renderImage()}
+                  </td>
+                </tr>
+              <tr>
+                <td>
+                  {expression && this.renderResult()}
+                </td>
+                <td>
+                  <SummaryPieChart
+                      angry={angry}
+                      sad={sad}
+                      happy={happy}
+                      neutral={neutral}
+                      surprise={surprise}
+                      disgust={disgust}
+                      fear={fear}
+                  />
+                </td>
+              </tr>
+            </tbody>
+        </Table>
       </Fragment>
     );
   }
