@@ -223,16 +223,42 @@ class WebCam1 extends Component {
     return(imageSrc && <img src={imageSrc} alt={"Loading"} />)
   }
 
+  renderLoader() {
+      return(<iframe
+          src="https://giphy.com/embed/17mNCcKU1mJlrbXodo"
+          width="480"
+          height="267"
+          frameBorder="0"
+          className="giphy-embed"
+          allowFullScreen/>);
+  }
+
+  renderSummaryPieChart() {
+      const {
+          angry,
+          sad,
+          happy,
+          neutral,
+          surprise,
+          disgust,
+          fear,
+      } = this.state;
+      return (
+          <SummaryPieChart
+              angry={angry}
+              sad={sad}
+              happy={happy}
+              neutral={neutral}
+              surprise={surprise}
+              disgust={disgust}
+              fear={fear}
+          />
+      );
+  }
+
   render() {
     const {
       expression,
-      angry,
-      sad,
-      happy,
-      neutral,
-      surprise,
-      disgust,
-      fear,
       isGifHide,
     } = this.state;
     return (
@@ -250,17 +276,10 @@ class WebCam1 extends Component {
               <tr>
                 <td>
                   {!isGifHide && expression && this.renderResult()}
+                  {isGifHide && this.renderLoader()}
                 </td>
                 <td>
-                  <SummaryPieChart
-                      angry={angry}
-                      sad={sad}
-                      happy={happy}
-                      neutral={neutral}
-                      surprise={surprise}
-                      disgust={disgust}
-                      fear={fear}
-                  />
+                  {this.renderSummaryPieChart()}
                 </td>
               </tr>
             </tbody>
