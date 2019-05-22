@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import Webcam from "react-webcam";
 import SummaryPieChart from "./SummaryPieChart.js";
+import { Table, Button, Container, Row, Col } from 'react-bootstrap';
 
 const EXPRESSION_MAP = {
   angry: {
@@ -30,6 +31,10 @@ const EXPRESSION_MAP = {
   surprise: {
     gifurl: "https://giphy.com/embed/kym4u59Xx1V2U",
     comment: "You look SURPRISED!!!"
+  },
+  fear: {
+    gifurl: "https://giphy.com/embed/xUOxf5cHAC4GFFYNWw",
+    comment: "You look in FEAR!!! Where is the Ghost!!"
   }
 };
 
@@ -47,6 +52,7 @@ class WebCam1 extends Component {
       angry: 0,
       sad: 0,
       happy: 0,
+      fear: 0,
       neutral: 0,
       surprise: 0,
       disgust: 0
@@ -92,6 +98,35 @@ class WebCam1 extends Component {
               happy: count
             });
             break;
+          case "sad":
+            count = this.state.sad + 1;
+            this.setState({
+              sad: count
+            });
+            break;
+          case "disgust":
+            count = this.state.disgust + 1;
+            this.setState({
+              disgust: count
+            });
+            break;
+          case "surprise":
+            count = this.state.surprise + 1;
+            this.setState({
+              surprise: count
+            });
+            break;
+          case "fear":
+            count = this.state.fear + 1;
+            this.setState({
+              fear: count
+            });
+            break;
+          case "neutral":
+            count = this.state.neutral + 1;
+            this.setState({
+              neutral: count
+            });
         }
       });
   };
@@ -110,7 +145,6 @@ class WebCam1 extends Component {
           className="giphy-embed"
           allowFullScreen
         />
-        <button onClick={this.renderWebCam}>Try Again</button>
       </Fragment>
     );
   }
@@ -121,7 +155,6 @@ class WebCam1 extends Component {
       height: 720,
       facingMode: "user"
     };
-    const { imageSrc } = this.state;
 
     return (
       <Fragment>
@@ -133,10 +166,16 @@ class WebCam1 extends Component {
           width={600}
           videoConstraints={videoConstraints}
         />
-        <button onClick={this.capture}>Capture photo</button>
-        {imageSrc && <img src={imageSrc} alt={"Loading"} />}
+        <Button onClick={this.capture}>Capture photo</Button>
       </Fragment>
     );
+  }
+
+  renderImage() {
+    const {
+      imageSrc,
+    } = this.state;
+    return(imageSrc && <img src={imageSrc} alt={"Loading"} />)
   }
 
   render() {
@@ -147,20 +186,39 @@ class WebCam1 extends Component {
       happy,
       neutral,
       surprise,
-      disgust
+      disgust,
+      fear,
     } = this.state;
     return (
-      <Fragment>
-        {this.renderWebCam()}
-        {expression && this.renderResult()}
-        <SummaryPieChart
-          angry={angry}
-          sad={sad}
-          happy={happy}
-          neutral={neutral}
-          surprise={surprise}
-          disgust={disgust}
-        />
+        <Fragment>
+          <Table style={{position: 'absolute'}}>
+            <tbody>
+              <tr>
+                  <td>
+                    {this.renderWebCam()}
+                  </td>
+                  <td style={{paddingTop: '180px'}}>
+                    {this.renderImage()}
+                  </td>
+                </tr>
+              <tr>
+                <td>
+                  {expression && this.renderResult()}
+                </td>
+                <td>
+                  <SummaryPieChart
+                      angry={angry}
+                      sad={sad}
+                      happy={happy}
+                      neutral={neutral}
+                      surprise={surprise}
+                      disgust={disgust}
+                      fear={fear}
+                  />
+                </td>
+              </tr>
+            </tbody>
+        </Table>
       </Fragment>
     );
   }

@@ -28,6 +28,7 @@
     "react-bootstrap": "^1.0.0-beta.8",
     "react-webcam": "^1.1.1",
     "react-youtube": "^7.9.0",
+    "reactstrap": "^8.0.0",
     "recharts": "^1.6.1",
     "url-loader": "^1.1.2"
   }
