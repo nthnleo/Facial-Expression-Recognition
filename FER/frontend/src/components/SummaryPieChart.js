@@ -48,8 +48,9 @@ class SummaryPieChart extends Component{
     }
     render() {
         const data = this.formatData();
-        return <ResponsiveContainer width="100%" height={250}>
-            <PieChart height={250}>
+        return <ResponsiveContainer width="100%" height={300}>
+            <PieChart
+                height={300}>
                 <Pie
                     data={data}
                     cx="50%"
@@ -66,7 +67,6 @@ class SummaryPieChart extends Component{
                                 value,
                                 index
                             }) => {
-                        console.log("handling label?");
                         const RADIAN = Math.PI / 180;
                         // eslint-disable-next-line
                         const radius = 25 + innerRadius + (outerRadius - innerRadius);
