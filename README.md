@@ -5,7 +5,9 @@
 
 `npm install`
 
-`python3 -m venv ferve src/ferve/activate`
+`python3 -m venv ferve`
+
+`source ferve/bin/activate`
 
 `pip3 install -r requirements.txt`
 
