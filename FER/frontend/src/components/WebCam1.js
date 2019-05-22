@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import Webcam from "react-webcam";
+import SummaryPieChart from './SummaryPieChart.js'
 
 const EXPRESSION_MAP = {
     angry: {
@@ -26,6 +27,10 @@ const EXPRESSION_MAP = {
         gifurl: "https://giphy.com/embed/R0jWWtH1CtFEk",
         comment: "You are DISGUSTED!! Who cut the cheese???",
     },
+    surprise: {
+        gifurl: "https://giphy.com/embed/kym4u59Xx1V2U",
+        comment: "You look SURPRISED!!!",
+    }
 };
 
 class WebCam1 extends Component {
@@ -39,6 +44,12 @@ class WebCam1 extends Component {
             expression: '',
             videoId: '',
             imageSrc: '',
+            angry: 0,
+            sad: 0,
+            happy: 0,
+            neutral: 0,
+            surprise: 0,
+            disgust: 0,
         }
     }
 
@@ -61,11 +72,27 @@ class WebCam1 extends Component {
       })
       .then(data => {
         console.log(data);
-        this.setState({
-          expression: data.expressionFromGCP
-            ? data.expressionFromGCP.toLowerCase()
-            : data.expression.toLowerCase()
-        });
+        let expression = data.expressionFromGCP
+              ? data.expressionFromGCP.toLowerCase()
+              : data.expression.toLowerCase();
+              this.setState({
+                  expression: expression,
+              });
+          let count = 0;
+        switch(expression) {
+            case 'angry':
+                count = this.state.angry+1;
+                this.setState({
+                angry: count,
+            });
+                break;
+            case 'happy':
+                count = this.state.happy+1;
+                this.setState({
+                happy: count,
+            });
+                break;
+        }
       });
   };
 
@@ -78,6 +105,7 @@ class WebCam1 extends Component {
           <Fragment>
             <div> {comment} </div>
             <iframe src={gifurl} width="480" height="267" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
+            <button onClick={this.renderWebCam}>Try Again</button>
         </Fragment>
       );
     }
@@ -93,8 +121,7 @@ class WebCam1 extends Component {
     } = this.state;
 
     return (
-        !imageSrc ?
-          <Fragment>
+        <Fragment>
             <Webcam
               audio={false}
               height={600}
@@ -104,19 +131,33 @@ class WebCam1 extends Component {
               videoConstraints={videoConstraints}
             />
             <button onClick={this.capture}>Capture photo</button>
-          </Fragment>  :
-          <img src={imageSrc} alt={"Loading"}/>
+            { imageSrc && <img src={imageSrc} alt={"Loading"}/> }
+        </Fragment>
     );
   }
 
     render() {
         const {
             expression,
+            angry,
+            sad,
+            happy,
+            neutral,
+            surprise,
+            disgust,
         } = this.state;
         return (
             <Fragment>
                 { this.renderWebCam() }
                 { expression && this.renderResult() }
+                <SummaryPieChart
+                    angry={angry}
+                    sad={sad}
+                    happy={happy}
+                    neutral={neutral}
+                    surprise={surprise}
+                    disgust={disgust}
+                />
             </Fragment>
         );
     }
