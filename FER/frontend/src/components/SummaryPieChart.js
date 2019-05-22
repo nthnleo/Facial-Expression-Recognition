@@ -38,6 +38,7 @@ class SummaryPieChart extends Component{
                 value: disgust
             },
         ];
+        data = data.filter(item => item.value);
         return data;
     }
     render() {
