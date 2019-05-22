@@ -77,8 +77,7 @@ class SummaryPieChart extends Component {
                   textAnchor={x > cx ? "start" : "end"}
                   dominantBaseline="central"
                 >
-                  {data[index].name} ({Math.round((value / totalCount) * 100)}{" "}
-                  %)
+                  {data[index].name} ({Math.round((value / totalCount) * 100)}%)
                 </text>
               );
             }}
