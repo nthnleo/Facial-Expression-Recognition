@@ -27,6 +27,10 @@ def get_expression():
     print(image)
     image = np.resize(image, (1, 48, 48, 1))
     images.append(image)
-    result = predict_emotion(face_images=images)
-    print(result)
-    return result
+    try:
+        result = predict_emotion(face_images=images)
+        print(result)
+        return result
+    except:
+        print('Unexpected error')
+        return None
