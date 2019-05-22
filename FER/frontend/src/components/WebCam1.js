@@ -6,7 +6,9 @@ const EXPRESSION_MAP = {
     sad: "https://giphy.com/embed/9Y5BbDSkSTiY8",
     happy: "https://giphy.com/embed/rdma0nDFZMR32",
     neutral: "https://giphy.com/embed/3o6nUYhmHg75WFGHHG",
-}
+    none: "https://giphy.com/embed/5QW76Ww9bquHdg1fTv",
+    disgust: "https://giphy.com/embed/R0jWWtH1CtFEk",
+};
 
 class WebCam1 extends Component {
       setRef = webcam => {
@@ -46,22 +48,20 @@ class WebCam1 extends Component {
             ? data.expressionFromGCP.toLowerCase()
             : data.expression.toLowerCase()
         });
-        alert(data);
       });
   };
 
-  renderGif() {
+  renderResult() {
       const {
           expression,
       } = this.state;
       let gifSrc = EXPRESSION_MAP[expression];
-        return (
-            <Fragment>
-                <iframe src={gifSrc} width="480" height="267" frameBorder="0"
-                        className="giphy-embed" allowFullScreen></iframe>
-            </Fragment>
-
-        );
+      return (
+          <Fragment>
+            <div> Hey You are {expression} </div>
+            <iframe src={gifSrc} width="480" height="267" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
+        </Fragment>
+      );
     }
 
   renderWebCam() {
@@ -71,7 +71,6 @@ class WebCam1 extends Component {
       facingMode: "user"
     };
     const {
-        expression,
         imageSrc,
     } = this.state;
 
@@ -99,7 +98,7 @@ class WebCam1 extends Component {
         return (
             <Fragment>
                 { this.renderWebCam() }
-                { expression && this.renderGif() }
+                { expression && this.renderResult() }
             </Fragment>
         );
     }
