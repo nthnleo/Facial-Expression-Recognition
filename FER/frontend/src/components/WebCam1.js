@@ -2,12 +2,30 @@ import React, { Component, Fragment } from "react";
 import Webcam from "react-webcam";
 
 const EXPRESSION_MAP = {
-    angry: "https://giphy.com/embed/11tTNkNy1SdXGg",
-    sad: "https://giphy.com/embed/9Y5BbDSkSTiY8",
-    happy: "https://giphy.com/embed/rdma0nDFZMR32",
-    neutral: "https://giphy.com/embed/3o6nUYhmHg75WFGHHG",
-    none: "https://giphy.com/embed/5QW76Ww9bquHdg1fTv",
-    disgust: "https://giphy.com/embed/R0jWWtH1CtFEk",
+    angry: {
+        gifurl:"https://giphy.com/embed/11tTNkNy1SdXGg",
+        comment: "You look ANGRY!!!!",
+    },
+    sad: {
+        gifurl: "https://giphy.com/embed/9Y5BbDSkSTiY8",
+        comment: "You look SAD. Cheer Up!!!",
+    },
+    happy: {
+        gifurl: "https://giphy.com/embed/rdma0nDFZMR32",
+        comment: "WOW! You look HAPPY!! This is your day",
+    },
+    neutral: {
+        gifurl: "https://giphy.com/embed/3o6nUYhmHg75WFGHHG",
+        comment: "You are NEUTRAL!!! Are you not human",
+    },
+    none: {
+        gifurl: "https://giphy.com/embed/5QW76Ww9bquHdg1fTv",
+        comment: "Are you invisible! I can't find you!!!",
+    },
+    disgust: {
+        gifurl: "https://giphy.com/embed/R0jWWtH1CtFEk",
+        comment: "You are DISGUSTED!! Who cut the cheese???",
+    },
 };
 
 class WebCam1 extends Component {
@@ -55,11 +73,11 @@ class WebCam1 extends Component {
       const {
           expression,
       } = this.state;
-      let gifSrc = EXPRESSION_MAP[expression];
+      const { gifurl, comment } = EXPRESSION_MAP[expression];
       return (
           <Fragment>
-            <div> Hey You are {expression} </div>
-            <iframe src={gifSrc} width="480" height="267" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
+            <div> {comment} </div>
+            <iframe src={gifurl} width="480" height="267" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
         </Fragment>
       );
     }
