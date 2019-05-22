@@ -81,7 +81,7 @@ class WebCam1 extends Component {
         let expression = data.expressionFromGCP
           ? data.expressionFromGCP
           : data.expression;
-        expression = expression ? expression.toLowerCase() : null;
+        expression = expression ? expression.toLowerCase() : "none";
         this.setState({
           expression: expression
         });
@@ -204,10 +204,12 @@ class WebCam1 extends Component {
           width={600}
           videoConstraints={videoConstraints}
         />
-        <button onClick={this.capture}>Capture photo</button>
-          <button onClick={this.state.isRecord ? this.stopRecording : this.startRecording}>
-              {this.state.isRecord ? "Stop Recording": "Start Recording"}
-          </button>
+        <div style={{display: 'block', margin: 'auto'}}>
+            <button onClick={this.capture}>Capture photo</button>
+              <button onClick={this.state.isRecord ? this.stopRecording : this.startRecording}>
+                  {this.state.isRecord ? "Stop Recording": "Start Recording"}
+              </button>
+        </div>
       </Fragment>
     );
   }
@@ -229,7 +231,6 @@ class WebCam1 extends Component {
       surprise,
       disgust,
       fear,
-      isRecord,
     } = this.state;
     return (
         <Fragment>
