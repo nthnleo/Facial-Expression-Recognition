@@ -56,13 +56,14 @@ class WebCam1 extends Component {
       neutral: 0,
       surprise: 0,
       disgust: 0,
+      isGifHide: false,
       isRecord: false,
     };
   }
 
   capture = () => {
     const imageSrc = this.webcam.getScreenshot();
-    this.setState({ imageSrc });
+    this.setState({ imageSrc, isGifHide: true });
     fetch("http://127.0.0.1:8000/facialExpression/extractExpression", {
       method: "POST",
       headers: {
@@ -83,7 +84,8 @@ class WebCam1 extends Component {
           : data.expression;
         expression = expression ? expression.toLowerCase() : "none";
         this.setState({
-          expression: expression
+          expression: expression,
+          isGifHide: false,
         });
         this.addExpression(expression);
       });
@@ -231,6 +233,7 @@ class WebCam1 extends Component {
       surprise,
       disgust,
       fear,
+      isGifHide,
     } = this.state;
     return (
         <Fragment>
@@ -246,7 +249,7 @@ class WebCam1 extends Component {
                 </tr>
               <tr>
                 <td>
-                  {expression && this.renderResult()}
+                  {!isGifHide && expression && this.renderResult()}
                 </td>
                 <td>
                   <SummaryPieChart
