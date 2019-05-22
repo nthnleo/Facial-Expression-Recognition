@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { ResponsiveContainer, PieChart, Pie } from "recharts";
-import { Panel } from "react-bootstrap";
 
 class SummaryPieChart extends Component {
   formatData() {
