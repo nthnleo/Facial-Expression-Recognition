@@ -40,16 +40,17 @@ class WebCam1 extends Component {
 
   constructor(props) {
     super(props);
+    let interval;
     this.state = {
       expression: "",
-      videoId: "",
       imageSrc: "",
       angry: 0,
       sad: 0,
       happy: 0,
       neutral: 0,
       surprise: 0,
-      disgust: 0
+      disgust: 0,
+      isRecord: false,
     };
   }
 
@@ -78,23 +79,79 @@ class WebCam1 extends Component {
         this.setState({
           expression: expression
         });
-        let count = 0;
-        switch (expression) {
-          case "angry":
-            count = this.state.angry + 1;
-            this.setState({
-              angry: count
-            });
-            break;
-          case "happy":
-            count = this.state.happy + 1;
-            this.setState({
-              happy: count
-            });
-            break;
-        }
       });
   };
+
+  startRecording = () => {
+      this.setState({isRecord: true});
+      this.interval = setInterval(() => {
+          const imageSrc = this.webcam.getScreenshot();
+          fetch("http://127.0.0.1:8000/facialExpression/extractExpression", {
+              method: "POST",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  data: imageSrc
+              })
+          })
+              .then(response => {
+                  return response.json();
+              })
+              .then(data => {
+                  console.log(data);
+                  let expression = data.expressionFromGCP
+                      ? data.expressionFromGCP
+                      : data.expression;
+                  expression = expression ? expression.toLowerCase() : null;
+                  let count = 0;
+                  switch (expression) {
+                      case "angry":
+                          count = this.state.angry + 1;
+                          this.setState({
+                              angry: count
+                          });
+                          break;
+                      case "sad":
+                          count = this.state.sad + 1;
+                          this.setState({
+                              sad: count
+                          });
+                          break;
+                      case "happy":
+                          count = this.state.happy + 1;
+                          this.setState({
+                              happy: count
+                          });
+                          break;
+                      case "neutral":
+                          count = this.state.neutral + 1;
+                          this.setState({
+                              neutral: count
+                          });
+                          break;
+                      case "disgust":
+                          count = this.state.disgust + 1;
+                          this.setState({
+                              disgust: count
+                          });
+                          break;
+                      case "surprise":
+                          count = this.state.surprise + 1;
+                          this.setState({
+                              surprise: count
+                          });
+                          break;
+                  }
+              });
+      }, 5000);
+  }
+
+  stopRecording = () => {
+      this.setState({isRecord: false});
+      clearInterval(this.interval);
+  }
 
   renderResult() {
     const { expression } = this.state;
@@ -134,6 +191,9 @@ class WebCam1 extends Component {
           videoConstraints={videoConstraints}
         />
         <button onClick={this.capture}>Capture photo</button>
+          <button onClick={this.state.isRecord ? this.stopRecording : this.startRecording}>
+              {this.state.isRecord ? "Stop Recording": "Start Recording"}
+          </button>
         {imageSrc && <img src={imageSrc} alt={"Loading"} />}
       </Fragment>
     );
@@ -147,7 +207,8 @@ class WebCam1 extends Component {
       happy,
       neutral,
       surprise,
-      disgust
+      disgust,
+        isRecord
     } = this.state;
     return (
       <Fragment>
